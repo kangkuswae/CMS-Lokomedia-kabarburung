@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (empty($_SESSION[username]) AND empty($_SESSION[passuser])){
+if (empty($_SESSION['username']) AND empty($_SESSION['passuser'])){
   echo "<link href='../config/adminstyle.css' rel='stylesheet' type='text/css'>
  <center>Untuk mengakses modul, Anda harus login <br>";
   echo "<a href=index.php><b>LOGIN</b></a></center>";

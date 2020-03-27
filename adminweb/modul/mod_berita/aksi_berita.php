@@ -4,12 +4,12 @@ include "../../../config/koneksi.php";
 include "../../../config/library.php";
 include "../../../config/fungsi_thumb.php";
 
-$module=$_GET[module];
-$act=$_GET[act];
+$module=$_GET['module'];
+$act=isset($_GET['act']) ?$_GET['act']:'';
 
 // Hapus berita
 if ($module=='berita' AND $act=='hapus'){
-  mysql_query("DELETE FROM berita WHERE id_berita='$_GET[id]'");
+  mysqli_query($conn,"DELETE FROM berita WHERE id_berita='$_GET[id]'");
   header('location:../../../adminweb/media.php?module='.$module);
 }
 
@@ -24,7 +24,7 @@ elseif ($module=='berita' AND $act=='input'){
   // Apabila ada gambar yang diupload
   if (!empty($lokasi_file)){
     UploadImage($nama_file_unik);
-    mysql_query("INSERT INTO berita(judul,
+    mysqli_query($conn,"INSERT INTO berita(judul,
                                     id_kategori,
                                     username,
                                     isi_berita,
@@ -42,7 +42,7 @@ elseif ($module=='berita' AND $act=='input'){
                                    '$nama_file_unik')");
   }
   else{
-    mysql_query("INSERT INTO berita(judul,
+    mysqli_query($conn,"INSERT INTO berita(judul,
                                     id_kategori,
                                     username,
                                     isi_berita,
@@ -70,14 +70,14 @@ elseif ($module=='berita' AND $act=='update'){
 
   // Apabila gambar tidak diganti
   if (empty($lokasi_file)){
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    isi_berita  = '$_POST[isi_berita]'  
                              WHERE id_berita   = '$_POST[id]'");
   }
   else{
     UploadImage($nama_file_unik);
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    isi_berita  = '$_POST[isi_berita]',
                                    gambar      = '$nama_file_unik'   

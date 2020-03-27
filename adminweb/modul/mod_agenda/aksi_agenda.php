@@ -2,12 +2,12 @@
 session_start();
 include "../../../config/koneksi.php";
 
-$module=$_GET[module];
-$act=$_GET[act];
+$module=$_GET['module'];
+$act=isset($_GET['act']) ?$_GET['act']:'';
 
 // Hapus agenda
 if ($module=='agenda' AND $act=='hapus'){
-  mysql_query("DELETE FROM agenda WHERE id_agenda='$_GET[id]'");
+  mysqli_query($conn,"DELETE FROM agenda WHERE id_agenda='$_GET[id]'");
   header('location:../../../adminweb/media.php?module='.$module);
 }
 
@@ -16,7 +16,7 @@ elseif ($module=='agenda' AND $act=='input'){
   $mulai=sprintf("%02d%02d%02d",$_POST[thn_mulai],$_POST[bln_mulai],$_POST[tgl_mulai]);
   $selesai=sprintf("%02d%02d%02d",$_POST[thn_selesai],$_POST[bln_selesai],$_POST[tgl_selesai]);
   
-  mysql_query("INSERT INTO agenda(tema,
+  mysqli_query($conn,"INSERT INTO agenda(tema,
                                   isi_agenda,
                                   tempat,
                                   tgl_mulai,
@@ -40,7 +40,7 @@ elseif ($module=='agenda' AND $act=='update'){
   $mulai=sprintf("%02d%02d%02d",$_POST[thn_mulai],$_POST[bln_mulai],$_POST[tgl_mulai]);
   $selesai=sprintf("%02d%02d%02d",$_POST[thn_selesai],$_POST[bln_selesai],$_POST[tgl_selesai]);
 
-  mysql_query("UPDATE agenda SET tema        = '$_POST[tema]',
+  mysqli_query($conn,"UPDATE agenda SET tema        = '$_POST[tema]',
                                  isi_agenda  = '$_POST[isi_agenda]',
                                  tgl_mulai   = '$mulai',
                                  tgl_selesai = '$selesai',

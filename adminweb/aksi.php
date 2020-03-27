@@ -4,24 +4,24 @@ include "../config/koneksi.php";
 include "../config/library.php";
 include "../config/fungsi_thumb.php";
 
-$module=$_GET[module];
-$act=$_GET[act];
+$module=$_GET['module'];
+$act=isset($_GET['act']) ?$_GET['act']:'';
 
 // Menghapus data
 if (isset($module) AND $act=='hapus'){
-  mysql_query("DELETE FROM ".$module." WHERE id_".$module."='$_GET[id]'");
+  mysqli_query($conn,"DELETE FROM ".$module." WHERE id_".$module."='$_GET[id]'");
   header('location:media.php?module='.$module);
 }
 
 // Input kategori
 elseif ($module=='kategori' AND $act=='input'){
-  mysql_query("INSERT INTO kategori(nama_kategori) VALUES('$_POST[nama_kategori]')");
+  mysqli_query($conn,"INSERT INTO kategori(nama_kategori) VALUES('$_POST[nama_kategori]')");
   header('location:media.php?module='.$module);
 }
 
 // Update kategori
 elseif ($module=='kategori' AND $act=='update'){
-  mysql_query("UPDATE kategori SET nama_kategori = '$_POST[nama_kategori]' WHERE id_kategori = '$_POST[id]'");
+  mysqli_query($conn,"UPDATE kategori SET nama_kategori = '$_POST[nama_kategori]' WHERE id_kategori = '$_POST[id]'");
   header('location:media.php?module='.$module);
 }
 
@@ -29,7 +29,7 @@ elseif ($module=='kategori' AND $act=='update'){
 // Input reporter
 elseif ($module=='reporter' AND $act=='input'){
   $pass=md5($_POST[password]);
-  mysql_query("INSERT INTO reporter(id_reporter,
+  mysqli_query($conn,"INSERT INTO reporter(id_reporter,
                                     password,
                                     nama_lengkap,
                                     email, 
@@ -46,7 +46,7 @@ elseif ($module=='reporter' AND $act=='input'){
 elseif ($module=='reporter' AND $act=='update'){
   // Apabila password tidak diubah
   if (empty($_POST[password])) {
-    mysql_query("UPDATE reporter SET id_reporter = '$_POST[id_reporter]',
+    mysqli_query($conn,"UPDATE reporter SET id_reporter = '$_POST[id_reporter]',
                                  nama_lengkap    = '$_POST[nama_lengkap]',
                                  email           = '$_POST[email]',  
                                  no_telp         = '$_POST[no_telp]'  
@@ -55,7 +55,7 @@ elseif ($module=='reporter' AND $act=='update'){
   // Apabila password diubah
   else{
     $pass=md5($_POST[password]);
-    mysql_query("UPDATE reporter SET id_reporter = '$_POST[id_reporter]',
+    mysqli_query($conn,"UPDATE reporter SET id_reporter = '$_POST[id_reporter]',
                                  password        = '$pass',
                                  nama_lengkap    = '$_POST[nama_lengkap]',
                                  email           = '$_POST[email]',  
@@ -92,7 +92,7 @@ $judul_kecil = strtolower($judul_seo);
   // Apabila ada gambar yang diupload
   if (!empty($lokasi_file)){
     UploadImage($nama_file_unik);
-    mysql_query("INSERT INTO berita(judul,
+    mysqli_query($conn,"INSERT INTO berita(judul,
                                     id_kategori,
                                     id_reporter,
                                     headline,
@@ -114,7 +114,7 @@ $judul_kecil = strtolower($judul_seo);
                                    '$nama_file_unik')");
   }
   else{
-    mysql_query("INSERT INTO berita(judul,
+    mysqli_query($conn,"INSERT INTO berita(judul,
                                     id_kategori,
                                     headline,
                                     isi_berita,
@@ -144,7 +144,7 @@ elseif ($module=='berita' AND $act=='update'){
 
   // Apabila gambar tidak diganti
   if (empty($lokasi_file)){
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    headline    = '$_POST[headline]',
                                    isi_berita  = '$_POST[isi_berita]'  
@@ -152,7 +152,7 @@ elseif ($module=='berita' AND $act=='update'){
   }
   else{
     UploadImage($nama_file_unik);
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    headline    = '$_POST[headline]',
                                    isi_berita  = '$_POST[isi_berita]',

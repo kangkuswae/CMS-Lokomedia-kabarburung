@@ -1,6 +1,6 @@
 <?php
 $aksi="modul/mod_berita/aksi_berita.php";
-switch($_GET[act]){
+switch(isset($_GET['act']) ?$_GET['act']:''){
   // Tampil Berita
   default:
     echo "<h2>Berita</h2>
@@ -8,18 +8,18 @@ switch($_GET[act]){
           <table>
           <tr><th>no</th><th>judul</th><th>tgl. posting</th><th>aksi</th></tr>";
 
-    if ($_SESSION[leveluser]=='admin'){
-      $tampil = mysql_query("SELECT * FROM berita ORDER BY id_berita DESC");
+    if ($_SESSION['leveluser']=='admin'){
+      $tampil = mysqli_query($conn,"SELECT * FROM berita ORDER BY id_berita DESC");
     }
     else{
-      $tampil=mysql_query("SELECT * FROM berita 
+      $tampil=mysqli_query($conn,"SELECT * FROM berita 
                            WHERE id_reporter='$_SESSION[namauser]'       
                            ORDER BY id_berita DESC");
     }
   
     $no = 1;
-    while($r=mysql_fetch_array($tampil)){
-      $tgl_posting=tgl_indo($r[tanggal]);
+    while($r=mysqli_fetch_array($tampil)){
+      $tgl_posting=tgl_indo($r['tanggal']);
       echo "<tr><td>$no</td>
                 <td>$r[judul]</td>
                 <td>$tgl_posting</td>
@@ -39,8 +39,8 @@ switch($_GET[act]){
           <tr><td>Kategori</td>  <td> : 
           <select name='kategori'>
             <option value=0 selected>- Pilih Kategori -</option>";
-            $tampil=mysql_query("SELECT * FROM kategori ORDER BY nama_kategori");
-            while($r=mysql_fetch_array($tampil)){
+            $tampil=mysqli_query($conn,"SELECT * FROM kategori ORDER BY nama_kategori");
+            while($r=mysqli_fetch_array($tampil)){
               echo "<option value=$r[id_kategori]>$r[nama_kategori]</option>";
             }
     echo "</select></td></tr>
@@ -52,8 +52,8 @@ switch($_GET[act]){
      break;
     
   case "editberita":
-    $edit = mysql_query("SELECT * FROM berita WHERE id_berita='$_GET[id]'");
-    $r    = mysql_fetch_array($edit);
+    $edit = mysqli_query($conn,"SELECT * FROM berita WHERE id_berita='$_GET[id]'");
+    $r    = mysqli_fetch_array($edit);
 
     echo "<h2>Edit Berita</h2>
           <form method=POST enctype='multipart/form-data' action=$aksi?module=berita&act=update>
@@ -62,12 +62,12 @@ switch($_GET[act]){
           <tr><td>Judul</td>     <td> : <input type=text name='judul' size=60 value='$r[judul]'></td></tr>
           <tr><td>Kategori</td>  <td> : <select name='kategori'>";
  
-          $tampil=mysql_query("SELECT * FROM kategori ORDER BY nama_kategori");
-          if ($r[id_kategori]==0){
+          $tampil=mysqli_query($conn,"SELECT * FROM kategori ORDER BY nama_kategori");
+          if ($r['id_kategori']==0){
             echo "<option value=0 selected>- Pilih Kategori -</option>";
           }   
 
-          while($w=mysql_fetch_array($tampil)){
+          while($w=mysqli_fetch_array($tampil)){
             if ($r[id_kategori]==$w[id_kategori]){
               echo "<option value=$w[id_kategori] selected>$w[nama_kategori]</option>";
             }
